@@ -4,7 +4,7 @@ A Simple Pong Game and Bot written in JavaScript
 
 ## Demo
 
-[Pong Bot Demo](https://niteshkumarniranjan/pongbot-supervisedlearning)
+[Pong Bot Demo](https://niteshkumarniranjan.me/pongbot-supervisedlearning)
 
 ## Libraries
 1. Tensorflow.js  -  [Link](https://js.tensorflow.org)
