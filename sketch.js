@@ -89,7 +89,7 @@ function draw() {
         let xd = [
             ball.pos.x, ball.pos.y, player.pos.x, player.pos.y, enemy.pos.x, enemy.pos.y
         ];
-        let yd = playerVelocity < 0 ? [1, 0, 0]: enemyVelocity > 0 ? [0, 0, 1] : [0, 1, 0];
+        let yd = playerVelocity < 0 ? [1, 0, 0]: playerVelocity > 0 ? [0, 0, 1] : [0, 1, 0];
         inputdata.push(xd);
         outputdata.push(yd);
     }
