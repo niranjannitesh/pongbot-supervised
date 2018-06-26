@@ -22,24 +22,33 @@ function setup() {
     ball = new Ball();
     player = new Paddle(width - 40);
     enemy = new Paddle(20);
+    smooth(100);
 }
 
 function draw() {
-    background(255);
+    background(232, 235, 242);
+    stroke(22, 38, 61);
+    strokeWeight(1);
+
     // outer border
     rect(0, 0, width - 1, height - 1);
     // center line
-    for (i = 0; i < height; i+= 9) {
-        if (i % 2 == 0)line(width / 2, i, width /2, i + 10);
+    for (i = 0; i < height; i += 9) {
+        if (i % 2 == 0) line(width / 2, i, width / 2, i + 10);
     }
 
+    stroke(170, 110, 48);
+    fill(254, 193, 131);
     ball.display();
 
     if (isPlaying) ball.update();
 
-    fill(0);
+    fill(235, 133, 165);
+    stroke(166, 43, 82);
     enemy.display();
-    fill(255);
+
+    stroke(22, 94, 94);
+    fill(115, 201, 201);
 
     let d = -enemy.pos.y + ball.pos.y;
 
@@ -59,7 +68,7 @@ function draw() {
         ball.direction.y += enemyVelocity / 32;
     }
 
-    if (ball.collide(player.pos.x -10 , player.pos.y, player.h + 10)) {
+    if (ball.collide(player.pos.x, player.pos.y - 10, player.h + 12)) {
         ball.direction.y += playerVelocity / 32;
     }
 
@@ -67,7 +76,7 @@ function draw() {
 
     if (!trainnig_mode) {
         const _d = tf.tensor2d([
-            [ball.pos.x, ball.pos.y, player.pos.x, player.pos.y, enemy.pos.x, enemy.pos.y]
+            [ball.pos.x, ball.pos.y, player.pos.y, enemy.pos.y]
         ]);
         let x2 = tfmodel.predict(_d).dataSync();
         let m = x2.indexOf(Math.max(...x2));
@@ -76,6 +85,7 @@ function draw() {
             console.log("UP");
         } else if (m === 1) {
             playerVelocity = 0;
+            console.log("STAY");
         } else if (m === 2) {
             playerVelocity = 10;
             console.log("BOTTOM");
@@ -87,9 +97,9 @@ function draw() {
 
     if (isPlaying && trainnig_mode) {
         let xd = [
-            ball.pos.x, ball.pos.y, player.pos.x, player.pos.y, enemy.pos.x, enemy.pos.y
+            ball.pos.x, ball.pos.y, player.pos.y, enemy.pos.y
         ];
-        let yd = playerVelocity < 0 ? [1, 0, 0]: playerVelocity > 0 ? [0, 0, 1] : [0, 1, 0];
+        let yd = playerVelocity < 0 ? [1, 0, 0] : playerVelocity > 0 ? [0, 0, 1] : [0, 1, 0];
         inputdata.push(xd);
         outputdata.push(yd);
     }
@@ -129,7 +139,7 @@ function keyPressed() {
     if (key.toLowerCase() === 't') {
         isPlaying = false;
         trainnig_mode = false;
-        train().then(x => {isPlaying = true; playerScore = enemyScore = 0});
+        train().then(x => { isPlaying = true; playerScore = enemyScore = 0 });
     }
 
 }
@@ -145,7 +155,7 @@ async function train() {
     console.log('Traning Started!');
     const xs = tf.tensor2d(inputdata);
     const ys = tf.tensor2d(outputdata);
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 50; i++) {
         const res = await tfmodel.fit(xs, ys, { shuffle: true });
         console.log('Loss :', res.history.loss[0]);
     }
@@ -163,10 +173,10 @@ function drawScore() {
     textAlign(CENTER);
     textSize(20);
     textFont('Roboto Thin');
-    text("Press 'p' to start or pause the game.", width /2, 50);
-    text("Press 't' to start training the nn.", width / 2, 100);
+    // text("Press 'p' to start or pause the game.", width /2, 50);
+    // text("Press 't' to start training the nn.", width / 2, 100);
     textSize(40);
     text(playerScore, player.pos.x - 80, 80);
     text(enemyScore, 80, 80);
-    fill(255);
+    fill(232, 235, 242);
 }

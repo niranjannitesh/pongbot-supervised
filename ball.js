@@ -8,7 +8,7 @@ class Ball {
             x: random(-2, 2),
             y: random(-2, 2)
         };
-        this.velocity = createVector(1, 1).mult(10);
+        this.velocity = createVector(1, 1).mult(16);
     }
 
     display() {
