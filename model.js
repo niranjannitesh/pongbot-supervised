@@ -9,7 +9,7 @@ const tfmodel = tf.sequential();
 
 tfmodel.add(tf.layers.dense({
     units: 256,        // number of nodes
-    inputShape: [6], // input shape
+    inputShape: [4], // input shape
     activation: 'sigmoid',
 }));
 
@@ -31,7 +31,7 @@ tfmodel.add(tf.layers.dense({
     activation: 'sigmoid',
 })); // add the output layer to model
 
-const optimizer = tf.train.adam(0.0001);
+const optimizer = tf.train.adam(0.001);
 
 tfmodel.compile({
     optimizer,
